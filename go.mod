@@ -1,4 +1,4 @@
-module try-go
+module github.com/Lucky3028/try-go
 
 go 1.19
 
