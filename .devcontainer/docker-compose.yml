@@ -9,7 +9,9 @@ services:
         - NODE_VERSION=lts/*
     command: sleep infinity
     volumes:
-      - ..:/workspace:cached
+      - type: bind
+        source: ..
+        target: /workspace:cached
     cap_add:
       - SYS_PTRACE
     security_opt:
@@ -28,7 +30,11 @@ services:
     expose:
       - 3306
     volumes:
-      - db-volume:/var/lib/mysql
-      - ../sql:/sql
+      - type: volume
+        source: db-volume
+        target: /var/lib/mysql
+      - type: bind
+        source: ../repositories/testdata/*.sql
+        target: /sql/
 volumes:
   db-volume:
