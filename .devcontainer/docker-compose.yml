@@ -14,3 +14,20 @@ services:
       - SYS_PTRACE
     security_opt:
       - seccomp:unconfined
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --sql-mode=ONLY_FULL_GROUP_BY,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+    env_file:
+      - .env
+    environment:
+      TZ: 'Asia/Tokyo'
+    expose:
+      - 3306
+    volumes:
+      - db-volume:/var/lib/mysql
+volumes:
+  db-volume:
