@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/Lucky3028/try-go/handlers"
-	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+
+	"github.com/Lucky3028/try-go/handlers"
+	"github.com/gorilla/mux"
 )
 
 func main() {
