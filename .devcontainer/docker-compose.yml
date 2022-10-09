@@ -29,6 +29,6 @@ services:
       - 3306
     volumes:
       - db-volume:/var/lib/mysql
-      - ./sql:/sql
+      - ../sql:/sql
 volumes:
   db-volume:
