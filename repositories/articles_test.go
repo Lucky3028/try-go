@@ -5,6 +5,7 @@ import (
 
 	"github.com/Lucky3028/try-go/models"
 	"github.com/Lucky3028/try-go/repositories"
+	"github.com/Lucky3028/try-go/repositories/testdata"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -15,23 +16,11 @@ func TestFindArticleById(t *testing.T) {
 	}{
 		{
 			testTitle: "subtest1",
-			expected: models.Article{
-				Id:         1,
-				Title:      "firstPost",
-				Contents:   "This is my first blog.",
-				UserName:   "Me",
-				NiceCounts: 0,
-			},
+			expected:  testdata.ArticlesTestData[0],
 		},
 		{
 			testTitle: "subtest2",
-			expected: models.Article{
-				Id:         2,
-				Title:      "secondPost",
-				Contents:   "This is my second blog.",
-				UserName:   "Me",
-				NiceCounts: 0,
-			},
+			expected:  testdata.ArticlesTestData[1],
 		},
 	}
 
@@ -62,7 +51,7 @@ func TestFindArticleById(t *testing.T) {
 }
 
 func TestListArticles(t *testing.T) {
-	expected := 2
+	expected := len(testdata.ArticlesTestData)
 	list, err := repositories.ListArticles(testDb, 1)
 	if err != nil {
 		t.Fatal(err)
@@ -84,7 +73,7 @@ func TestAddArticle(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	expectedArticleId := 3
+	expectedArticleId := len(testdata.ArticlesTestData) + 1
 	if newArticle.Id != expectedArticleId {
 		t.Errorf("new article id is expected %d but got %d\n", expectedArticleId, newArticle.Id)
 	}
@@ -96,12 +85,12 @@ func TestAddArticle(t *testing.T) {
 }
 
 func TestIncrementNiceCount(t *testing.T) {
-	articleId := 1
+	articleId := testdata.ArticlesTestData[0].Id
 	before, err := repositories.FindArticleById(testDb, articleId)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := repositories.IncrementNiceCounts(testDb, 1); err != nil {
+	if err := repositories.IncrementNiceCounts(testDb, articleId); err != nil {
 		t.Fatal(err)
 	}
 	after, err := repositories.FindArticleById(testDb, articleId)
@@ -110,6 +99,6 @@ func TestIncrementNiceCount(t *testing.T) {
 	}
 
 	if after.NiceCounts-before.NiceCounts != 1 {
-		t.Error("fail to update nice num")
+		t.Error("fail to update nice counts")
 	}
 }
