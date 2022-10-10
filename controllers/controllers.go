@@ -7,16 +7,16 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Lucky3028/try-go/controllers/services"
 	"github.com/Lucky3028/try-go/models"
-	"github.com/Lucky3028/try-go/services"
 	"github.com/gorilla/mux"
 )
 
 type ApplicationController struct {
-	service *services.ApplicationService
+	service services.IApplicationService
 }
 
-func NewApplicationController(service *services.ApplicationService) *ApplicationController {
+func NewApplicationController(service services.IApplicationService) *ApplicationController {
 	return &ApplicationController{service}
 }
 
