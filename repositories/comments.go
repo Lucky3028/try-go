@@ -36,8 +36,13 @@ func ListCommentsByArticleId(db *sql.DB, articleId int) ([]models.Comment, error
 	commentList := make([]models.Comment, 0)
 	for rows.Next() {
 		var comment models.Comment
+		var createdAt sql.NullTime
+		rows.Scan(&comment.CommentId, &comment.Message, &createdAt)
 		comment.ArticleId = articleId
-		rows.Scan(&comment.CommentId, &comment.Message, &comment.CreatedAt)
+		if createdAt.Valid {
+			comment.CreatedAt = createdAt.Time
+		}
+
 		commentList = append(commentList, comment)
 	}
 

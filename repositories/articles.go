@@ -29,7 +29,7 @@ func AddArticle(db *sql.DB, article models.Article) (models.Article, error) {
 const articlesPerPage = 5
 
 func ListArticles(db *sql.DB, page int) ([]models.Article, error) {
-	const query = `select article_id, title, contents, username, nice from articles limit ? offset ?;`
+	const query = `select * from articles limit ? offset ?;`
 	rows, err := db.Query(query, articlesPerPage, ((page - 1) * articlesPerPage))
 	if err != nil {
 		return nil, err
@@ -39,7 +39,12 @@ func ListArticles(db *sql.DB, page int) ([]models.Article, error) {
 	articleList := make([]models.Article, 0)
 	for rows.Next() {
 		var article models.Article
-		rows.Scan(&article.Id, &article.Title, &article.Contents, &article.UserName, &article.NiceCounts)
+		var createdAt sql.NullTime
+		rows.Scan(&article.Id, &article.Title, &article.Contents, &article.UserName, &article.NiceCounts, &createdAt)
+		if createdAt.Valid {
+			article.CreatedAt = createdAt.Time
+		}
+
 		articleList = append(articleList, article)
 	}
 
@@ -54,9 +59,12 @@ func FindArticleById(db *sql.DB, id int) (models.Article, error) {
 	}
 
 	var article models.Article
-	err := row.Scan(&article.Id, &article.Title, &article.Contents, &article.UserName, &article.NiceCounts, &article.CreatedAt)
-	if err != nil {
+	var createdAt sql.NullTime
+	if err := row.Scan(&article.Id, &article.Title, &article.Contents, &article.UserName, &article.NiceCounts, &createdAt); err != nil {
 		return models.Article{}, err
+	}
+	if createdAt.Valid {
+		article.CreatedAt = createdAt.Time
 	}
 
 	return article, nil
