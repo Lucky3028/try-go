@@ -20,7 +20,7 @@ func NewApplicationController(service *services.ApplicationService) *Application
 	return &ApplicationController{service}
 }
 
-func HelloHandler(writer http.ResponseWriter, req *http.Request) {
+func (controller *ApplicationController) HelloHandler(writer http.ResponseWriter, req *http.Request) {
 	io.WriteString(writer, "Hello World!\n")
 }
 
