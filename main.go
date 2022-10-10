@@ -7,9 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Lucky3028/try-go/controllers"
 	"github.com/Lucky3028/try-go/routers"
-	"github.com/Lucky3028/try-go/services"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -41,10 +39,7 @@ func main() {
 		log.Println("fail to connect to DB")
 		return
 	}
-	service := services.NewApplicationService(db)
-	controller := controllers.NewApplicationController(service)
-
-	router := routers.NewRouter(controller)
+	router := routers.NewRouter(db)
 
 	log.Printf("server start at port %d", port)
 	log.Fatal(http.ListenAndServe(serverAddress, router))
