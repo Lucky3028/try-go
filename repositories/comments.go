@@ -8,9 +8,9 @@ import (
 
 func AddComment(db *sql.DB, comment models.Comment) (models.Comment, error) {
 	const query = `
-		insert into comments (article_id, comments, created_at) values (?, ?, now());
+		insert into comments (article_id, message, created_at) values (?, ?, now());
 	`
-	result, err := db.Exec(query)
+	result, err := db.Exec(query, comment.ArticleId, comment.Message)
 	if err != nil {
 		return models.Comment{}, nil
 	}
