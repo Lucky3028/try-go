@@ -12,19 +12,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type ApplicationController struct {
-	service services.IApplicationService
+type ArticleController struct {
+	service services.IArticleService
 }
 
-func NewApplicationController(service services.IApplicationService) *ApplicationController {
-	return &ApplicationController{service}
+func NewArticleController(service services.IArticleService) *ArticleController {
+	return &ArticleController{service}
 }
 
-func (controller *ApplicationController) HelloHandler(writer http.ResponseWriter, req *http.Request) {
+func (controller *ArticleController) HelloHandler(writer http.ResponseWriter, req *http.Request) {
 	io.WriteString(writer, "Hello World!\n")
 }
 
-func (controller *ApplicationController) PostArticleHandler(writer http.ResponseWriter, req *http.Request) {
+func (controller *ArticleController) PostArticleHandler(writer http.ResponseWriter, req *http.Request) {
 	var requestedArticle models.Article
 	if err := json.NewDecoder(req.Body).Decode(&requestedArticle); err != nil {
 		http.Error(writer, "fail to decode json\n", http.StatusInternalServerError)
@@ -40,7 +40,7 @@ func (controller *ApplicationController) PostArticleHandler(writer http.Response
 	json.NewEncoder(writer).Encode(article)
 }
 
-func (controller *ApplicationController) ListArticlesHandler(writer http.ResponseWriter, req *http.Request) {
+func (controller *ArticleController) ListArticlesHandler(writer http.ResponseWriter, req *http.Request) {
 	queryMap := req.URL.Query()
 
 	var page int
@@ -64,7 +64,7 @@ func (controller *ApplicationController) ListArticlesHandler(writer http.Respons
 	json.NewEncoder(writer).Encode(&articles)
 }
 
-func (controller *ApplicationController) ArticleDetailHandler(writer http.ResponseWriter, req *http.Request) {
+func (controller *ArticleController) ArticleDetailHandler(writer http.ResponseWriter, req *http.Request) {
 	articleId, err := strconv.Atoi(mux.Vars(req)["id"])
 	if err != nil {
 		http.Error(writer, "Invalid query parameter", http.StatusBadRequest)
@@ -79,7 +79,7 @@ func (controller *ApplicationController) ArticleDetailHandler(writer http.Respon
 	json.NewEncoder(writer).Encode(&article)
 }
 
-func (controller *ApplicationController) PostNiceHandler(writer http.ResponseWriter, req *http.Request) {
+func (controller *ArticleController) PostNiceHandler(writer http.ResponseWriter, req *http.Request) {
 	var requestedArticle models.Article
 	if err := json.NewDecoder(req.Body).Decode(&requestedArticle); err != nil {
 		http.Error(writer, "fail to decode json\n", http.StatusBadRequest)
@@ -92,19 +92,4 @@ func (controller *ApplicationController) PostNiceHandler(writer http.ResponseWri
 	}
 
 	json.NewEncoder(writer).Encode(&article)
-}
-
-func (controller *ApplicationController) PostCommentHandler(writer http.ResponseWriter, req *http.Request) {
-	var requestedComment models.Comment
-	if err := json.NewDecoder(req.Body).Decode(&requestedComment); err != nil {
-		http.Error(writer, "fail to decode json\n", http.StatusBadRequest)
-	}
-
-	comment, err := controller.service.PostComment(requestedComment)
-	if err != nil {
-		http.Error(writer, "fail internal exec\n", http.StatusInternalServerError)
-		return
-	}
-
-	json.NewEncoder(writer).Encode(&comment)
 }
