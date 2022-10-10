@@ -11,7 +11,10 @@ services:
     volumes:
       - type: bind
         source: ..
-        target: /workspace:cached
+        target: /workspace
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
     cap_add:
       - SYS_PTRACE
     security_opt:
@@ -34,7 +37,7 @@ services:
         source: db-volume
         target: /var/lib/mysql
       - type: bind
-        source: ../repositories/testdata/*.sql
-        target: /sql/
+        source: ../repositories/testdata/sql
+        target: /sql
 volumes:
   db-volume:
