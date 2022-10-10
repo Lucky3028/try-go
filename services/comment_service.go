@@ -5,14 +5,8 @@ import (
 	"github.com/Lucky3028/try-go/repositories"
 )
 
-func PostComment(comment models.Comment) (models.Comment, error) {
-	db, err := connectToDb()
-	if err != nil {
-		return models.Comment{}, err
-	}
-	defer db.Close()
-
-	newComment, err := repositories.AddComment(db, comment)
+func (service *ApplicationService) PostComment(comment models.Comment) (models.Comment, error) {
+	newComment, err := repositories.AddComment(service.db, comment)
 	if err != nil {
 		return models.Comment{}, err
 	}

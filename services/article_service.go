@@ -5,19 +5,13 @@ import (
 	"github.com/Lucky3028/try-go/repositories"
 )
 
-func GetArticle(id int) (models.Article, error) {
-	db, err := connectToDb()
-	if err != nil {
-		return models.Article{}, err
-	}
-	defer db.Close()
-
-	article, err := repositories.FindArticleById(db, id)
+func (service *ApplicationService) GetArticle(id int) (models.Article, error) {
+	article, err := repositories.FindArticleById(service.db, id)
 	if err != nil {
 		return models.Article{}, err
 	}
 
-	comments, err := repositories.ListCommentsByArticleId(db, id)
+	comments, err := repositories.ListCommentsByArticleId(service.db, id)
 	if err != nil {
 		return models.Article{}, err
 	}
@@ -27,14 +21,8 @@ func GetArticle(id int) (models.Article, error) {
 	return article, nil
 }
 
-func PostArticle(article models.Article) (models.Article, error) {
-	db, err := connectToDb()
-	if err != nil {
-		return models.Article{}, err
-	}
-	defer db.Close()
-
-	newArticle, err := repositories.AddArticle(db, article)
+func (service *ApplicationService) PostArticle(article models.Article) (models.Article, error) {
+	newArticle, err := repositories.AddArticle(service.db, article)
 	if err != nil {
 		return models.Article{}, err
 	}
@@ -42,14 +30,8 @@ func PostArticle(article models.Article) (models.Article, error) {
 	return newArticle, nil
 }
 
-func GetArticlesList(page int) ([]models.Article, error) {
-	db, err := connectToDb()
-	if err != nil {
-		return nil, err
-	}
-	defer db.Close()
-
-	list, err := repositories.ListArticles(db, page)
+func (service *ApplicationService) GetArticlesList(page int) ([]models.Article, error) {
+	list, err := repositories.ListArticles(service.db, page)
 	if err != nil {
 		return nil, err
 	}
@@ -57,14 +39,8 @@ func GetArticlesList(page int) ([]models.Article, error) {
 	return list, nil
 }
 
-func IncrementNiceCounts(article models.Article) (models.Article, error) {
-	db, err := connectToDb()
-	if err != nil {
-		return models.Article{}, err
-	}
-	defer db.Close()
-
-	if err := repositories.IncrementNiceCounts(db, article.Id); err != nil {
+func (service *ApplicationService) IncrementNiceCounts(article models.Article) (models.Article, error) {
+	if err := repositories.IncrementNiceCounts(service.db, article.Id); err != nil {
 		return models.Article{}, err
 	}
 
