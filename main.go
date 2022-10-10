@@ -30,6 +30,11 @@ func connectToDb() (*sql.DB, error) {
 	return db, nil
 }
 
+var (
+	port          = 8080
+	serverAddress = fmt.Sprintf(":%d", port)
+)
+
 func main() {
 	db, err := connectToDb()
 	if err != nil {
@@ -41,6 +46,6 @@ func main() {
 
 	router := routers.NewRouter(controller)
 
-	log.Println("server start at port 8080")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Printf("server start at port %d", port)
+	log.Fatal(http.ListenAndServe(serverAddress, router))
 }
