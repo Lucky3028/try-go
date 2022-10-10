@@ -2,12 +2,13 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/Lucky3028/try-go/models"
+	"github.com/Lucky3028/try-go/services"
 	"github.com/gorilla/mux"
 )
 
@@ -22,7 +23,12 @@ func PostArticleHandler(writer http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	article := requestedArticle
+	article, err := services.PostArticle(requestedArticle)
+	if err != nil {
+		http.Error(writer, "fail internal exec\n", http.StatusInternalServerError)
+		return
+	}
+
 	json.NewEncoder(writer).Encode(article)
 }
 
@@ -40,10 +46,13 @@ func ListArticlesHandler(writer http.ResponseWriter, req *http.Request) {
 	} else {
 		page = 1
 	}
-	// TODO: use page
-	log.Println(page)
 
-	articles := []models.Article{models.Article1, models.Article2}
+	articles, err := services.GetArticlesList(page)
+	if err != nil {
+		fmt.Println(err)
+		http.Error(writer, "fail internal exec\n", http.StatusInternalServerError)
+		return
+	}
 	json.NewEncoder(writer).Encode(&articles)
 }
 
@@ -53,19 +62,41 @@ func ArticleDetailHandler(writer http.ResponseWriter, req *http.Request) {
 		http.Error(writer, "Invalid query parameter", http.StatusBadRequest)
 		return
 	}
-	// TODO: use articleId
-	log.Println(articleId)
 
-	article := models.Article1
+	article, err := services.GetArticle(articleId)
+	if err != nil {
+		http.Error(writer, "fail internal exec\n", http.StatusInternalServerError)
+		return
+	}
 	json.NewEncoder(writer).Encode(&article)
 }
 
 func PostNiceHandler(writer http.ResponseWriter, req *http.Request) {
-	article := models.Article1
+	var requestedArticle models.Article
+	if err := json.NewDecoder(req.Body).Decode(&requestedArticle); err != nil {
+		http.Error(writer, "fail to decode json\n", http.StatusBadRequest)
+	}
+
+	article, err := services.IncrementNiceCounts(requestedArticle)
+	if err != nil {
+		http.Error(writer, "fail internal exec\n", http.StatusInternalServerError)
+		return
+	}
+
 	json.NewEncoder(writer).Encode(&article)
 }
 
 func PostCommentHandler(writer http.ResponseWriter, req *http.Request) {
-	comment := models.Comment1
+	var requestedComment models.Comment
+	if err := json.NewDecoder(req.Body).Decode(&requestedComment); err != nil {
+		http.Error(writer, "fail to decode json\n", http.StatusBadRequest)
+	}
+
+	comment, err := services.PostComment(requestedComment)
+	if err != nil {
+		http.Error(writer, "fail internal exec\n", http.StatusInternalServerError)
+		return
+	}
+
 	json.NewEncoder(writer).Encode(&comment)
 }
