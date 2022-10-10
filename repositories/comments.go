@@ -16,11 +16,8 @@ func AddComment(db *sql.DB, comment models.Comment) (models.Comment, error) {
 	}
 
 	id, _ := result.LastInsertId()
-	newComment := models.Comment{
-		CommentId: int(id),
-		ArticleId: comment.ArticleId,
-		Message:   comment.Message,
-	}
+	newComment := comment
+	newComment.CommentId = int(id)
 
 	return newComment, nil
 }

@@ -16,12 +16,8 @@ func AddArticle(db *sql.DB, article models.Article) (models.Article, error) {
 	}
 
 	id, _ := result.LastInsertId()
-	newArticle := models.Article{
-		Id:       int(id),
-		Title:    article.Title,
-		Contents: article.Contents,
-		UserName: article.UserName,
-	}
+	newArticle := article
+	newArticle.Id = int(id)
 
 	return newArticle, nil
 }
