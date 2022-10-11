@@ -22,6 +22,8 @@ func (writer *loggingResponseWriter) WriteHeader(code int) {
 func Logging(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		traceId := newTraceId()
+		ctx := SetTraceId(request.Context(), traceId)
+		request = request.WithContext(ctx)
 		logWriter := NewLoggingResponseWriter(writer)
 
 		log.Printf("[%d]%s %s\n", traceId, request.RequestURI, request.Method)

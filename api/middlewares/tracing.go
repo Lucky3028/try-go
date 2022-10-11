@@ -1,6 +1,9 @@
 package middlewares
 
-import "sync"
+import (
+	"context"
+	"sync"
+)
 
 var (
 	logNo int = 1
@@ -16,4 +19,18 @@ func newTraceId() int {
 	mutex.Unlock()
 
 	return no
+}
+
+func SetTraceId(ctx context.Context, traceId int) context.Context {
+	return context.WithValue(ctx, "traceId", traceId)
+}
+
+func GetTraceId(ctx context.Context) int {
+	id := ctx.Value("traceId")
+
+	if idInt, ok := id.(int); ok {
+		return idInt
+	}
+
+	return 0
 }
