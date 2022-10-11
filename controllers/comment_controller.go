@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/Lucky3028/try-go/app_errors"
 	"github.com/Lucky3028/try-go/controllers/services"
 	"github.com/Lucky3028/try-go/models"
 )
@@ -19,6 +20,7 @@ func NewCommentController(service services.ICommentService) *CommentController {
 func (controller *CommentController) PostCommentHandler(writer http.ResponseWriter, req *http.Request) {
 	var requestedComment models.Comment
 	if err := json.NewDecoder(req.Body).Decode(&requestedComment); err != nil {
+		err = app_errors.RequestBodyDecodeFailed.Wrap(err, "bad request body")
 		http.Error(writer, "fail to decode json\n", http.StatusBadRequest)
 	}
 
