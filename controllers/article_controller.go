@@ -83,6 +83,7 @@ func (controller *ArticleController) PostNiceHandler(writer http.ResponseWriter,
 	var requestedArticle models.Article
 	if err := json.NewDecoder(req.Body).Decode(&requestedArticle); err != nil {
 		http.Error(writer, "fail to decode json\n", http.StatusBadRequest)
+		return
 	}
 
 	article, err := controller.service.IncrementNiceCounts(requestedArticle)
