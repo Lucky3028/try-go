@@ -21,12 +21,13 @@ func (writer *loggingResponseWriter) WriteHeader(code int) {
 
 func Logging(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
-		log.Println(request.RequestURI, request.Method)
-
+		traceId := newTraceId()
 		logWriter := NewLoggingResponseWriter(writer)
+
+		log.Printf("[%d]%s %s\n", traceId, request.RequestURI, request.Method)
 
 		next.ServeHTTP(logWriter, request)
 
-		log.Println("res:", logWriter.code)
+		log.Printf("[%d]res: %d", traceId, logWriter.code)
 	})
 }
