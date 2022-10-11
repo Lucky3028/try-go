@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"context"
 	"log"
 	"net/http"
 )
@@ -22,7 +23,8 @@ func (writer *loggingResponseWriter) WriteHeader(code int) {
 func Logging(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		traceId := newTraceId()
-		ctx := SetTraceId(request.Context(), traceId)
+		ctx := request.Context()
+		ctx = context.WithValue(ctx, traceIdKey{}, traceId)
 		request = request.WithContext(ctx)
 		logWriter := NewLoggingResponseWriter(writer)
 

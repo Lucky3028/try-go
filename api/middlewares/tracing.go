@@ -21,12 +21,14 @@ func newTraceId() int {
 	return no
 }
 
+type traceIdKey struct{}
+
 func SetTraceId(ctx context.Context, traceId int) context.Context {
-	return context.WithValue(ctx, "traceId", traceId)
+	return context.WithValue(ctx, traceIdKey{}, traceId)
 }
 
 func GetTraceId(ctx context.Context) int {
-	id := ctx.Value("traceId")
+	id := ctx.Value(traceIdKey{})
 
 	if idInt, ok := id.(int); ok {
 		return idInt
