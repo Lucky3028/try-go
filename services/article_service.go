@@ -30,7 +30,7 @@ func (service *ApplicationService) GetArticle(id int) (models.Article, error) {
 		return models.Article{}, err
 	}
 
-	article.CommentList = comments
+	article.CommentList = append(article.CommentList, comments...)
 
 	return article, nil
 }
