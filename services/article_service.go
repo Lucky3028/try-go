@@ -64,7 +64,7 @@ func (service *ApplicationService) GetArticlesList(page int) ([]models.Article, 
 func (service *ApplicationService) IncrementNiceCounts(article models.Article) (models.Article, error) {
 	if err := repositories.IncrementNiceCounts(service.db, article.Id); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			err = app_errors.DataNotFound.Wrap(err, "no data")
+			err = app_errors.NoTargetData.Wrap(err, "no data")
 
 			return models.Article{}, err
 		}

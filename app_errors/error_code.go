@@ -8,7 +8,8 @@ const (
 	InsertDataFailed ErrCode = "S001"
 	GetDataFailed    ErrCode = "S002"
 	DataNotFound     ErrCode = "S003"
-	UpdateDataFailed ErrCode = "S004"
+	NoTargetData     ErrCode = "S004"
+	UpdateDataFailed ErrCode = "S005"
 )
 
 func (code ErrCode) Wrap(err error, message string) error {
