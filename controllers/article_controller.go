@@ -57,7 +57,6 @@ func (controller *ArticleController) ListArticlesHandler(writer http.ResponseWri
 
 	articles, err := controller.service.GetArticlesList(page)
 	if err != nil {
-		fmt.Println(err)
 		http.Error(writer, "fail internal exec\n", http.StatusInternalServerError)
 		return
 	}
