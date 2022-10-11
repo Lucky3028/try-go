@@ -3,7 +3,7 @@ package app_errors
 type ApplicationError struct {
 	ErrCode
 	Message string
-	Err     error
+	Err     error `json:"-"`
 }
 
 func (appErr ApplicationError) Error() string {
