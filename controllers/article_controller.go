@@ -34,7 +34,7 @@ func (controller *ArticleController) PostArticleHandler(writer http.ResponseWrit
 
 	article, err := controller.service.PostArticle(requestedArticle)
 	if err != nil {
-		http.Error(writer, "fail internal exec\n", http.StatusInternalServerError)
+		app_errors.ErrorHandler(writer, req, err)
 		return
 	}
 
@@ -59,7 +59,7 @@ func (controller *ArticleController) ListArticlesHandler(writer http.ResponseWri
 
 	articles, err := controller.service.GetArticlesList(page)
 	if err != nil {
-		http.Error(writer, "fail internal exec\n", http.StatusInternalServerError)
+		app_errors.ErrorHandler(writer, req, err)
 		return
 	}
 	json.NewEncoder(writer).Encode(&articles)
@@ -75,7 +75,7 @@ func (controller *ArticleController) ArticleDetailHandler(writer http.ResponseWr
 
 	article, err := controller.service.GetArticle(articleId)
 	if err != nil {
-		http.Error(writer, "fail internal exec\n", http.StatusInternalServerError)
+		app_errors.ErrorHandler(writer, req, err)
 		return
 	}
 	json.NewEncoder(writer).Encode(&article)
@@ -91,7 +91,7 @@ func (controller *ArticleController) PostNiceHandler(writer http.ResponseWriter,
 
 	article, err := controller.service.IncrementNiceCounts(requestedArticle)
 	if err != nil {
-		http.Error(writer, "fail internal exec\n", http.StatusInternalServerError)
+		app_errors.ErrorHandler(writer, req, err)
 		return
 	}
 

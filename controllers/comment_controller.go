@@ -26,7 +26,7 @@ func (controller *CommentController) PostCommentHandler(writer http.ResponseWrit
 
 	comment, err := controller.service.PostComment(requestedComment)
 	if err != nil {
-		http.Error(writer, "fail internal exec\n", http.StatusInternalServerError)
+		app_errors.ErrorHandler(writer, req, err)
 		return
 	}
 
