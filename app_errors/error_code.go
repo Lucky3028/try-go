@@ -10,6 +10,9 @@ const (
 	DataNotFound     ErrCode = "S003"
 	NoTargetData     ErrCode = "S004"
 	UpdateDataFailed ErrCode = "S005"
+
+	RequestBodyDecodeFailed ErrCode = "R001"
+	BadParam                ErrCode = "R002"
 )
 
 func (code ErrCode) Wrap(err error, message string) error {
