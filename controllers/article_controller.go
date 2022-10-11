@@ -28,7 +28,7 @@ func (controller *ArticleController) PostArticleHandler(writer http.ResponseWrit
 	var requestedArticle models.Article
 	if err := json.NewDecoder(req.Body).Decode(&requestedArticle); err != nil {
 		err = app_errors.RequestBodyDecodeFailed.Wrap(err, "bad request body")
-		http.Error(writer, "fail to decode json\n", http.StatusInternalServerError)
+		app_errors.ErrorHandler(writer, req, err)
 		return
 	}
 
@@ -50,7 +50,7 @@ func (controller *ArticleController) ListArticlesHandler(writer http.ResponseWri
 		page, err = strconv.Atoi(p[0])
 		if err != nil {
 			err = app_errors.BadParam.Wrap(err, "query param must be number")
-			http.Error(writer, "Invalid query parameter", http.StatusBadRequest)
+			app_errors.ErrorHandler(writer, req, err)
 			return
 		}
 	} else {
@@ -69,7 +69,7 @@ func (controller *ArticleController) ArticleDetailHandler(writer http.ResponseWr
 	articleId, err := strconv.Atoi(mux.Vars(req)["id"])
 	if err != nil {
 		err = app_errors.BadParam.Wrap(err, "query param must be number")
-		http.Error(writer, "Invalid query parameter", http.StatusBadRequest)
+		app_errors.ErrorHandler(writer, req, err)
 		return
 	}
 
@@ -85,7 +85,7 @@ func (controller *ArticleController) PostNiceHandler(writer http.ResponseWriter,
 	var requestedArticle models.Article
 	if err := json.NewDecoder(req.Body).Decode(&requestedArticle); err != nil {
 		err = app_errors.RequestBodyDecodeFailed.Wrap(err, "bad request body")
-		http.Error(writer, "fail to decode json\n", http.StatusBadRequest)
+		app_errors.ErrorHandler(writer, req, err)
 		return
 	}
 

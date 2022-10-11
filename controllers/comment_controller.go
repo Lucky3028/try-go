@@ -21,7 +21,7 @@ func (controller *CommentController) PostCommentHandler(writer http.ResponseWrit
 	var requestedComment models.Comment
 	if err := json.NewDecoder(req.Body).Decode(&requestedComment); err != nil {
 		err = app_errors.RequestBodyDecodeFailed.Wrap(err, "bad request body")
-		http.Error(writer, "fail to decode json\n", http.StatusBadRequest)
+		app_errors.ErrorHandler(writer, req, err)
 	}
 
 	comment, err := controller.service.PostComment(requestedComment)
