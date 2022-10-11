@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Lucky3028/try-go/app_errors"
 	"github.com/Lucky3028/try-go/controllers/services"
 	"github.com/Lucky3028/try-go/models"
 	"github.com/gorilla/mux"
@@ -26,6 +27,7 @@ func (controller *ArticleController) HelloHandler(writer http.ResponseWriter, re
 func (controller *ArticleController) PostArticleHandler(writer http.ResponseWriter, req *http.Request) {
 	var requestedArticle models.Article
 	if err := json.NewDecoder(req.Body).Decode(&requestedArticle); err != nil {
+		err = app_errors.RequestBodyDecodeFailed.Wrap(err, "bad request body")
 		http.Error(writer, "fail to decode json\n", http.StatusInternalServerError)
 		return
 	}
@@ -47,6 +49,7 @@ func (controller *ArticleController) ListArticlesHandler(writer http.ResponseWri
 		var err error
 		page, err = strconv.Atoi(p[0])
 		if err != nil {
+			err = app_errors.BadParam.Wrap(err, "query param must be number")
 			http.Error(writer, "Invalid query parameter", http.StatusBadRequest)
 			return
 		}
@@ -65,6 +68,7 @@ func (controller *ArticleController) ListArticlesHandler(writer http.ResponseWri
 func (controller *ArticleController) ArticleDetailHandler(writer http.ResponseWriter, req *http.Request) {
 	articleId, err := strconv.Atoi(mux.Vars(req)["id"])
 	if err != nil {
+		err = app_errors.BadParam.Wrap(err, "query param must be number")
 		http.Error(writer, "Invalid query parameter", http.StatusBadRequest)
 		return
 	}
@@ -80,6 +84,7 @@ func (controller *ArticleController) ArticleDetailHandler(writer http.ResponseWr
 func (controller *ArticleController) PostNiceHandler(writer http.ResponseWriter, req *http.Request) {
 	var requestedArticle models.Article
 	if err := json.NewDecoder(req.Body).Decode(&requestedArticle); err != nil {
+		err = app_errors.RequestBodyDecodeFailed.Wrap(err, "bad request body")
 		http.Error(writer, "fail to decode json\n", http.StatusBadRequest)
 		return
 	}
