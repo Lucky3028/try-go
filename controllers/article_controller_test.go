@@ -9,8 +9,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// TODO: impl remaining tests
-
 const serverAddress = "http://localhost:8080"
 
 func genUnexpectedStatusCodeMsg(expected int, actual int) string {
