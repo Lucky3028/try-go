@@ -9,6 +9,14 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// TODO: impl remaining tests
+
+const serverAddress = "http://localhost:8080"
+
+func genUnexpectedStatusCodeMsg(expected int, actual int) string {
+	return fmt.Sprintf("unexpected StatusCode: want %d but %d\n", expected, actual)
+}
+
 func TestListArticlesHandler(t *testing.T) {
 	var tests = []struct {
 		name       string
@@ -21,13 +29,13 @@ func TestListArticlesHandler(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			url := fmt.Sprintf("http://localhost:8080/article/list?page=%s", tt.query)
+			url := fmt.Sprintf("%s/article/list?page=%s", serverAddress, tt.query)
 			request := httptest.NewRequest(http.MethodGet, url, nil)
 			response := httptest.NewRecorder()
 			articleController.ListArticlesHandler(response, request)
 
 			if response.Code != tt.resultCode {
-				t.Errorf("unexpected StatusCode: want %d but %d\n", tt.resultCode, response.Code)
+				t.Errorf(genUnexpectedStatusCodeMsg(tt.resultCode, response.Code))
 			}
 		})
 	}
@@ -45,7 +53,7 @@ func TestArticleDetailHandler(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			url := fmt.Sprintf("http://localhost:8080/article/%s", tt.articleID)
+			url := fmt.Sprintf("%s/article/%s", serverAddress, tt.articleID)
 			request := httptest.NewRequest(http.MethodGet, url, nil)
 			response := httptest.NewRecorder()
 
@@ -54,7 +62,7 @@ func TestArticleDetailHandler(t *testing.T) {
 			router.ServeHTTP(response, request)
 
 			if response.Code != tt.resultCode {
-				t.Errorf("unexpected StatusCode: want %d but %d\n", tt.resultCode, response.Code)
+				t.Errorf(genUnexpectedStatusCodeMsg(tt.resultCode, response.Code))
 			}
 		})
 	}
