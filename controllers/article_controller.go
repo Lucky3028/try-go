@@ -62,6 +62,7 @@ func (controller *ArticleController) ListArticlesHandler(writer http.ResponseWri
 		app_errors.ErrorHandler(writer, req, err)
 		return
 	}
+
 	json.NewEncoder(writer).Encode(&articles)
 }
 
@@ -78,6 +79,7 @@ func (controller *ArticleController) ArticleDetailHandler(writer http.ResponseWr
 		app_errors.ErrorHandler(writer, req, err)
 		return
 	}
+
 	json.NewEncoder(writer).Encode(&article)
 }
 
