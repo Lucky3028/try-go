@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
+	"github.com/Lucky3028/try-go/api/middlewares"
 	"github.com/Lucky3028/try-go/controllers"
 	"github.com/Lucky3028/try-go/services"
 	"github.com/gorilla/mux"
@@ -24,6 +25,8 @@ func NewRouter(db *sql.DB) *mux.Router {
 	router.HandleFunc("/article/nice", article.PostNiceHandler).Methods(http.MethodPost)
 
 	router.HandleFunc("/comment", comment.PostCommentHandler).Methods(http.MethodPost)
+
+	router.Use(middlewares.Logging)
 
 	return router
 }
